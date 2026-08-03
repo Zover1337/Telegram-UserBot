@@ -13,7 +13,7 @@
 **1. Клонирование репозитория и установка зависимостей**
 Убедитесь, что у вас установлен Python 3.8+
 ```bash
-git clone <ваш-репозиторий>
+git clone https://github.com/Zover1337/Telegram-UserBot
 cd Telegram-UserBot
 pip install pyrogram requests pytz bs4 tgcrypto
 ```
