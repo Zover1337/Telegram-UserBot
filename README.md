@@ -15,7 +15,7 @@
 ```bash
 git clone https://github.com/Zover1337/Telegram-UserBot
 cd Telegram-UserBot
-pip install pyrogram requests pytz bs4 tgcrypto
+pip install pyrofork requests pytz bs4 tgcrypto
 ```
 *(Примечание: tgcrypto рекомендуется для ускорения работы Pyrogram)*
 
