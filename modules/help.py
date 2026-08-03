@@ -16,11 +16,6 @@ async def help_handler(_, msg: Message):
 <code>.weather [Город]</code> — Погода в другом городе
 <code>.spotify</code> — Какой трек сейчас играет <emoji id="{spotify_emoji}">🎧</emoji>
 
-<emoji id="{internet_emoji}">🌐</emoji> <b>VPN:</b>
-<code>.vpn_help</code> — Частые вопросы
-<code>.vpn_apps</code> — Клиенты для работы
-<code>.requisites</code> — Реквизиты для оплаты
-
 <b>Модули:</b>
 <code>.dlmod [reply to file]</code> — Установить модуль
 <code>.delmod [module_name]</code> — Удалить модуль
