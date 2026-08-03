@@ -102,7 +102,7 @@ import base64
 CLIENT_ID = "ВАШ_CLIENT_ID"
 CLIENT_SECRET = "ВАШ_CLIENT_SECRET"
 # Вставьте ссылку на Google с вашим кодом:
-GOOGLE_URL = "[https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД](https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД)" 
+GOOGLE_URL = "https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД" 
 
 code = GOOGLE_URL.split("code=")[1].split("&")[0]
 auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
@@ -115,10 +115,10 @@ headers = {
 data = {
     "grant_type": "authorization_code",
     "code": code,
-    "redirect_uri": "[https://www.google.com/](https://www.google.com/)"
+    "redirect_uri": "https://www.google.com/"
 }
 
-res = requests.post("[https://accounts.spotify.com/api/token](https://accounts.spotify.com/api/token)", headers=headers, data=data).json()
+res = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data).json()
 
 if "refresh_token" in res:
     print("\n✅ Ваш SPOTIFY_REFRESH_TOKEN:\n", res["refresh_token"])
