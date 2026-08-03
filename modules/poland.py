@@ -1,3 +1,6 @@
+__MODULE__ = "Польша 🇵🇱"
+__HELP__ = "<code>.poland</code> — Шутка про Польшу"
+
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message

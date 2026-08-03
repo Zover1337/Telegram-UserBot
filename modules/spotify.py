@@ -1,3 +1,6 @@
+__MODULE__ = "Spotify 🎧"
+__HELP__ = "<code>.spotify</code> — Какой трек сейчас играет"
+
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message

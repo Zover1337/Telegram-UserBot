@@ -1,3 +1,6 @@
+__MODULE__ = "Управление ⚙️"
+__HELP__ = "<code>.dlmod [reply]</code> — Установить модуль\n<code>.delmod [name]</code> — Удалить модуль\n<code>.restart</code> — Рестарт"
+
 import os
 import sys
 import asyncio

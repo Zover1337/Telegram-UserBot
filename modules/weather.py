@@ -1,3 +1,6 @@
+__MODULE__ = "Погода ☁️"
+__HELP__ = "<code>.weather</code> — Погода в мск\n<code>.weather [Город]</code> — Погода в другом городе"
+
 import requests
 import pytz
 from datetime import datetime

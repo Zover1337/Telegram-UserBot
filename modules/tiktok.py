@@ -1,3 +1,6 @@
+__MODULE__ = "TikTok 🎥"
+__HELP__ = "<code>.tt &lt;link&gt;</code> — Скачать TikTok видео/слайды"
+
 import os
 import io
 import random

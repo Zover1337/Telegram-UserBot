@@ -1,24 +1,31 @@
+__MODULE__ = "Помощь ℹ️"
+__HELP__ = "<code>.help</code> — Показать это меню"
+
+import os
+import sys
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, zamok_emoji, usa_emoji, ton_emoji, internet_emoji, spotify_emoji
+from utils import ONLY_ME, zamok_emoji
 
 @Client.on_message(filters.command("help", prefixes=".") & ONLY_ME)
 async def help_handler(_, msg: Message):
-    text = f"""
-<emoji id="{zamok_emoji}">🔒</emoji> <b>Private Userbot v2.1</b>
-
-<code>.tt &lt;link&gt;</code> — Скачать TikTok
-<code>.usd</code> — Курс доляра <emoji id="{usa_emoji}">🇺🇸</emoji>
-<code>.ton</code> — Курс TON <emoji id="{ton_emoji}">💎</emoji>
-<code>.poland</code> — Шутка про Польшу
-<code>.rand_anec</code> — Чёрный анекдотик
-<code>.weather</code> — Погода в мск
-<code>.weather [Город]</code> — Погода в другом городе
-<code>.spotify</code> — Какой трек сейчас играет <emoji id="{spotify_emoji}">🎧</emoji>
-
-<b>Модули:</b>
-<code>.dlmod [reply to file]</code> — Установить модуль
-<code>.delmod [module_name]</code> — Удалить модуль
-<code>.restart</code> — Перезапустить юзербота
-    """
+    text = f'<emoji id="{zamok_emoji}">🔒</emoji> <b>Private Userbot v2.1</b>\n\n'
+    
+    modules_dir = "modules"
+    loaded_modules = []
+    
+    if os.path.exists(modules_dir):
+        for file in sorted(os.listdir(modules_dir)):
+            if file.endswith(".py") and not file.startswith("_"):
+                mod_name = file[:-3]
+                mod = sys.modules.get(f"modules.{mod_name}")
+                if mod and hasattr(mod, "__HELP__"):
+                    mod_title = getattr(mod, "__MODULE__", mod_name.capitalize())
+                    loaded_modules.append(f"<b>{mod_title}</b>:\n{mod.__HELP__}")
+                    
+    if loaded_modules:
+        text += "\n\n".join(loaded_modules)
+    else:
+        text += "<i>Нет загруженных модулей с описанием.</i>"
+        
     await msg.edit(text)

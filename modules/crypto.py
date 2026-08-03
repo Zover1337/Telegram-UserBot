@@ -1,3 +1,6 @@
+__MODULE__ = "Финансы 💸"
+__HELP__ = "<code>.usd</code> — Курс доляра\n<code>.ton</code> — Курс TON"
+
 import asyncio
 import requests
 from pyrogram import Client, filters

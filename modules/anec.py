@@ -1,3 +1,6 @@
+__MODULE__ = "Анекдоты 🏴"
+__HELP__ = "<code>.rand_anec</code> — Случайный чёрный анекдотик"
+
 import asyncio
 import random
 import requests
