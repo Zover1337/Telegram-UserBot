@@ -29,7 +29,7 @@ cp config.example.py config.py
 **3. Авторизация и создание демона Systemd**
 Перед первым запуском необходимо авторизовать свой аккаунт и создать файл `.session`. Для этого запустите скрипт:
 ```bash
-python install.py
+python3 install.py
 ```
 Введите номер телефона и код подтверждения из Telegram. После успешного входа скрипт спросит: **«Хотите сгенерировать systemd сервис для работы бота 24/7?»**
 Если вы ставите бота на Linux-сервер (VPS), нажмите `y`. Скрипт создаст файл `userbot.service` с правильными путями и выдаст вам готовые команды (sudo cp ..., systemctl enable ...), чтобы бот навсегда поселился в фоне вашей системы.
@@ -60,3 +60,61 @@ python main.py
 | `.rand_anec` / `.poland` | Развлекательные модули. |
 
 > Юзербот реагирует **только на ваши сообщения** (`filters.me`), поэтому никто другой не сможет использовать эти команды.
+
+
+## 🎧 Настройка и получение Spotify Refresh Token
+
+Для работы команды `.spotify` требуется авторизация через Spotify API. 
+
+### Шаг 1. Настройка приложения в Spotify Dashboard
+1. Перейдите в [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) и войдите в свой аккаунт.
+2. Создайте новое приложение (или выберите существующее) и перейдите в **Settings**.
+3. В поле **Redirect URIs** добавьте URL: `https://www.google.com/` и сохраните изменения.
+4. Скопируйте ваши **Client ID** и **Client Secret** в `config.py`.
+
+### Шаг 2. Авторизация и получение одноразового кода
+1. Вставьте ваш `CLIENT_ID` в следующую ссылку и откройте её в браузере:
+   ```text
+   https://accounts.spotify.com/authorize?client_id=ВАШ_CLIENT_ID&response_type=code&redirect_uri=https://www.google.com/&scope=user-read-currently-playing%20user-read-playback-state
+    ```
+
+2. Подтвердите доступ, нажав **Agree**.
+3. Вас перенаправит на Google. Скопируйте **всю адресную строку** (она содержит параметр `?code=...`).
+
+### Шаг 3. Генерация Refresh Token
+
+Код из адресной строки действителен в течение 10 минут. Выполните следующий скрипт у себя на ПК:
+
+```python
+import requests
+import base64
+
+CLIENT_ID = "ВАШ_CLIENT_ID"
+CLIENT_SECRET = "ВАШ_CLIENT_SECRET"
+# Вставьте ссылку на Google с вашим кодом:
+GOOGLE_URL = "[https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД](https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД)" 
+
+code = GOOGLE_URL.split("code=")[1].split("&")[0]
+auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
+
+headers = {
+    "Authorization": "Basic " + base64.b64encode(auth_str.encode()).decode(),
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+data = {
+    "grant_type": "authorization_code",
+    "code": code,
+    "redirect_uri": "[https://www.google.com/](https://www.google.com/)"
+}
+
+res = requests.post("[https://accounts.spotify.com/api/token](https://accounts.spotify.com/api/token)", headers=headers, data=data).json()
+
+if "refresh_token" in res:
+    print("\n✅ Ваш SPOTIFY_REFRESH_TOKEN:\n", res["refresh_token"])
+else:
+    print("\n❌ Ошибка:", res)
+
+```
+
+Скопируйте полученный `refresh_token` и вставьте его в `SPOTIFY_REFRESH_TOKEN` в `config.py`.
