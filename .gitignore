@@ -1,0 +1,6 @@
+config.py
+modules/vpn.py
+my_userbot.session
+__pycache__/
+*.py[cod]
+*$py.class
