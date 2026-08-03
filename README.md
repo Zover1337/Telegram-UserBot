@@ -128,3 +128,8 @@ else:
 ```
 
 Скопируйте полученный `refresh_token` и вставьте его в `SPOTIFY_REFRESH_TOKEN` в `config.py`.
+
+<br>
+
+**AI-generated.**<br>
+*Использовались модели: Claude 4.6 Sonnet и Gemini 3.1 Pro.*
