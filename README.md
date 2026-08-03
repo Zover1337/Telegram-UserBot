@@ -37,7 +37,7 @@ python3 install.py
 **4. Запуск юзербота (без Systemd)**
 Если вы запускаете бота локально или не стали устанавливать systemd, используйте команду:
 ```bash
-python main.py
+python3 main.py
 ```
 
 ## 🧩 Управление модулями через Telegram
