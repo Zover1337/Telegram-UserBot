@@ -1,6 +1,7 @@
 config.py
 modules/vpn.py
 my_userbot.session
+.pending_modules/
 __pycache__/
 *.py[cod]
 *$py.class
