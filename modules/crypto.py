@@ -5,9 +5,9 @@ import asyncio
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, usa_emoji, usd_emoji, greenc_emoji, redc_emoji, up_emoji, ton_emoji, rocket_emoji, down_emoji
+from utils import ONLY_ME, PREFIXES, usa_emoji, usd_emoji, greenc_emoji, redc_emoji, up_emoji, ton_emoji, rocket_emoji, down_emoji
 
-@Client.on_message(filters.command("usd", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("usd", prefixes=PREFIXES) & ONLY_ME)
 async def usd_handler(_, msg: Message):
     try:
         await msg.edit("💸 <i>Звоню на Уолл-стрит...</i>")
@@ -35,7 +35,7 @@ async def usd_handler(_, msg: Message):
         await msg.edit(f"❌ Биржа упала: {e}")
 
 
-@Client.on_message(filters.command("ton", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("ton", prefixes=PREFIXES) & ONLY_ME)
 async def ton_handler(_, msg: Message):
     frames = ["📲 <i>Набираю Паше...</i>", "📲 <i>Набираю Паше...</i> 📞", "🗣 <i>Паш, че там по графикам?</i>", "🗣 <i>Ага, понял, ща передам.</i>"]
     for f in frames:

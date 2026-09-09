@@ -5,11 +5,14 @@ import os
 import sys
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, zamok_emoji
+from utils import ONLY_ME, PREFIXES, zamok_emoji
 
-@Client.on_message(filters.command("help", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("help", prefixes=PREFIXES) & ONLY_ME)
 async def help_handler(_, msg: Message):
-    text = f'<b>Userbot by Zover v1.0.2 (Release)</b>\n\n'
+    text = (
+        f'<b>Userbot by Zover v1.0.3 (Release)</b>\n'
+        f'<i>💡 Префиксы команд: <code>.</code> и <code>!</code> (! — резерв, если точка запрещена в чате)</i>\n\n'
+    )
     
     modules_dir = "modules"
     loaded_modules = []

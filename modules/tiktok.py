@@ -9,9 +9,9 @@ import random
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message, InputMediaPhoto
-from utils import ONLY_ME, link_emoji, tt_emoji
+from utils import ONLY_ME, PREFIXES, link_emoji, tt_emoji
 
-@Client.on_message(filters.command("tt", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("tt", prefixes=PREFIXES) & ONLY_ME)
 async def tt_handler(client: Client, msg: Message):
     file_name = None
     url = None

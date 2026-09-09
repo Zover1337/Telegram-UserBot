@@ -6,9 +6,9 @@ import pytz
 from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, DEFAULT_CITY, loading_effect, get_weather_emoji, world_emoji, clock_emoji, temp_emoji, calendar_emoji
+from utils import ONLY_ME, PREFIXES, DEFAULT_CITY, loading_effect, get_weather_emoji, world_emoji, clock_emoji, temp_emoji, calendar_emoji
 
-@Client.on_message(filters.command("weather", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("weather", prefixes=PREFIXES) & ONLY_ME)
 async def weather_handler(_, msg: Message):
     city = DEFAULT_CITY
     if len(msg.command) > 1:

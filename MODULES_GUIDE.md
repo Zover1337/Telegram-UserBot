@@ -21,19 +21,29 @@ __HELP__ = "<code>.hello</code> — Написать приветствие в �
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-# Обязательно импортируем ONLY_ME, чтобы чужие люди не могли управлять вашим ботом!
-from utils import ONLY_ME 
+# Обязательно импортируем ONLY_ME и PREFIXES из utils!
+from utils import ONLY_ME, PREFIXES
 
-@Client.on_message(filters.command("hello", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("hello", prefixes=PREFIXES) & ONLY_ME)
 async def hello_handler(client: Client, msg: Message):
-    # msg.edit заменяет ваше исходное сообщение ".hello" на новый текст
+    # msg.edit заменяет ваше исходное сообщение на новый текст
     await msg.edit("Привет! Я модульный юзербот! 🚀")
 ```
 
 ## 3. Важные правила разработки
 
 1. **Безопасность (`ONLY_ME`):** Всегда добавляйте `& ONLY_ME` в декоратор `filters.command(...)`. Если этого не сделать, любой участник группы сможет выполнить вашу команду от вашего имени!
-2. **Префиксы:** По умолчанию во всём юзерботе используется префикс `.` (точка). Рекомендуется придерживаться этого стандарта.
+2. **Префиксы команд (`PREFIXES`):**
+   Во всём юзерботе поддерживаются два префикса:
+   - `.` (точка) — основной стандарт (например, `.ping`, `.weather`).
+   - `!` (восклицательный знак) — резервный префикс (например, `!ping`, `!weather`). Он незаменим в чатах, где боты-модераторы или спам-фильтры удаляют/запрещают сообщения с точки.
+   
+   *Всегда импортируйте `PREFIXES` из `utils.py` и указывайте `prefixes=PREFIXES` в декораторе:*
+   ```python
+   from utils import ONLY_ME, PREFIXES
+
+   @Client.on_message(filters.command("cmd", prefixes=PREFIXES) & ONLY_ME)
+   ```
 3. **Редактирование сообщений:** Юзербот — это вы. Когда вы пишете `.команда`, вы отправляете реальное сообщение. Поэтому почти во всех хендлерах используется `await msg.edit("новый текст")`, чтобы красиво и бесшовно заменить саму команду на итоговый результат.
 4. **Асинхронность (`async / await`):** Не используйте блокирующие вызовы (например, `time.sleep()`). Для задержек всегда используйте `await asyncio.sleep()`.
 
@@ -44,9 +54,9 @@ async def hello_handler(client: Client, msg: Message):
 
 ```python
 import asyncio
-from utils import loading_effect, usa_emoji, link_emoji
+from utils import ONLY_ME, PREFIXES, loading_effect, usa_emoji, link_emoji
 
-@Client.on_message(filters.command("load", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("load", prefixes=PREFIXES) & ONLY_ME)
 async def load_handler(client: Client, msg: Message):
     # Красивая анимация загрузки из 3 кадров
     await loading_effect(msg, "Обработка данных", "⏳")

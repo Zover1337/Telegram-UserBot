@@ -15,7 +15,7 @@ import aiohttp
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait, MessageNotModified
-from utils import ONLY_ME, internet_emoji, world_emoji, link_emoji, check_emoji, cross_emoji
+from utils import ONLY_ME, PREFIXES, internet_emoji, world_emoji, link_emoji, check_emoji, cross_emoji, warn_emoji
 
 # --- 🌍 СЛОВАРИ СТРАН И ГОРОДОВ CHECK-HOST ---
 COUNTRY_RU = {
@@ -71,6 +71,10 @@ class EmojiHelper:
     @property
     def check(self) -> str:
         return self.tag(check_emoji, "✅")
+
+    @property
+    def warn(self) -> str:
+        return self.tag(warn_emoji, "⚠️")
 
     @property
     def planet(self) -> str:
@@ -144,7 +148,7 @@ def format_node_result(check_type: str, res, em: EmojiHelper) -> str:
         elif received > 0:
             avg_ms = (sum(ok_pings) / received) * 1000
             ms_str = f"{avg_ms:.1f}" if avg_ms < 10 else f"{int(round(avg_ms))}"
-            return f"⚠️ <b>{ms_str} ms</b> ({received}/{total})"
+            return f"{em.warn} <b>{ms_str} ms</b> ({received}/{total})"
         else:
             return f"{cross_icon} <b>Таймаут (0/{total})</b>"
 
@@ -467,7 +471,7 @@ def parse_args_and_target(command_name: str, args: list, reply_msg: Message):
 # --- 🚀 ХЕНДЛЕРЫ КОМАНД ---
 
 
-@Client.on_message(filters.command(["chping", "ping"], prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command(["chping", "ping"], prefixes=PREFIXES) & ONLY_ME)
 async def ch_ping_handler(client: Client, msg: Message):
     args = msg.command[1:] if len(msg.command) > 1 else []
     check_type, target, max_nodes = parse_args_and_target("ping", args, msg.reply_to_message)
@@ -478,7 +482,7 @@ async def ch_ping_handler(client: Client, msg: Message):
     await execute_check(client, msg, "ping", target, max_nodes)
 
 
-@Client.on_message(filters.command(["chtcp", "tcp"], prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command(["chtcp", "tcp"], prefixes=PREFIXES) & ONLY_ME)
 async def ch_tcp_handler(client: Client, msg: Message):
     args = msg.command[1:] if len(msg.command) > 1 else []
     check_type, target, max_nodes = parse_args_and_target("tcp", args, msg.reply_to_message)
@@ -489,7 +493,7 @@ async def ch_tcp_handler(client: Client, msg: Message):
     await execute_check(client, msg, "tcp", target, max_nodes)
 
 
-@Client.on_message(filters.command(["chudp", "udp"], prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command(["chudp", "udp"], prefixes=PREFIXES) & ONLY_ME)
 async def ch_udp_handler(client: Client, msg: Message):
     args = msg.command[1:] if len(msg.command) > 1 else []
     check_type, target, max_nodes = parse_args_and_target("udp", args, msg.reply_to_message)
@@ -500,7 +504,7 @@ async def ch_udp_handler(client: Client, msg: Message):
     await execute_check(client, msg, "udp", target, max_nodes)
 
 
-@Client.on_message(filters.command(["chhttp", "http"], prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command(["chhttp", "http"], prefixes=PREFIXES) & ONLY_ME)
 async def ch_http_handler(client: Client, msg: Message):
     args = msg.command[1:] if len(msg.command) > 1 else []
     check_type, target, max_nodes = parse_args_and_target("http", args, msg.reply_to_message)
@@ -511,7 +515,7 @@ async def ch_http_handler(client: Client, msg: Message):
     await execute_check(client, msg, "http", target, max_nodes)
 
 
-@Client.on_message(filters.command(["chdns", "dns"], prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command(["chdns", "dns"], prefixes=PREFIXES) & ONLY_ME)
 async def ch_dns_handler(client: Client, msg: Message):
     args = msg.command[1:] if len(msg.command) > 1 else []
     check_type, target, max_nodes = parse_args_and_target("dns", args, msg.reply_to_message)

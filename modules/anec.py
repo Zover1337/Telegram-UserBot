@@ -7,9 +7,9 @@ import requests
 from bs4 import BeautifulSoup
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, black_emoji
+from utils import ONLY_ME, PREFIXES, black_emoji
 
-@Client.on_message(filters.command("rand_anec", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("rand_anec", prefixes=PREFIXES) & ONLY_ME)
 async def anec_handler(_, msg: Message):
     bars = ["💾 Ищу в базе: [🟥⬜️⬜️]", "💾 Ищу в базе: [🟥🟥⬜️]", "💾 Ищу в базе: [🟥🟥🟥]"]
     for b in bars:

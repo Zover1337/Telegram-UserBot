@@ -12,18 +12,18 @@ import html
 import hashlib
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME
+from utils import ONLY_ME, PREFIXES
 from paths import MODULES_DIR, PENDING_DIR, safe_module_path
 
 # ponytail: карантин в памяти, теряется при рестарте — подтверждать сразу после .dlmod
 _pending = {}
 
-@Client.on_message(filters.command("restart", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("restart", prefixes=PREFIXES) & ONLY_ME)
 async def restart_handler(_, msg: Message):
     await msg.edit("🔄 Перезапускаю юзербота...")
     os.execl(sys.executable, sys.executable, *sys.argv)
 
-@Client.on_message(filters.command("dlmod", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("dlmod", prefixes=PREFIXES) & ONLY_ME)
 async def dlmod_handler(client: Client, msg: Message):
     args = msg.command[1:]
     if args and args[0] == "confirm":
@@ -91,7 +91,7 @@ async def install_pending(msg: Message, digest: str):
     await msg.edit(f"✅ Модуль <b>{html.escape(os.path.basename(dst))}</b> установлен! Перезапускаю...")
     os.execl(sys.executable, sys.executable, *sys.argv)
 
-@Client.on_message(filters.command("delmod", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("delmod", prefixes=PREFIXES) & ONLY_ME)
 async def delmod_handler(_, msg: Message):
     if len(msg.command) < 2:
         await msg.edit("❌ Укажите название модуля для удаления (без .py). Пример: <code>.delmod poland</code>")

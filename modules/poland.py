@@ -5,9 +5,9 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
-from utils import ONLY_ME
+from utils import ONLY_ME, PREFIXES
 
-@Client.on_message(filters.command("poland", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("poland", prefixes=PREFIXES) & ONLY_ME)
 async def poland_handler(_, msg: Message):
     lines = [
         "🇮🇩 — Польша наоборот",

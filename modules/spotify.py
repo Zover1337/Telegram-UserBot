@@ -7,7 +7,7 @@ import urllib.parse
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from utils import ONLY_ME, spotify_get_access_token, link_emoji, spotify_emoji
+from utils import ONLY_ME, PREFIXES, spotify_get_access_token, link_emoji, spotify_emoji
 
 try:
     import config
@@ -87,7 +87,7 @@ def get_music_links(spotify_url: str, name: str, artists: str):
     return links, fallback_thumbnail
 
 
-@Client.on_message(filters.command("spotify", prefixes=".") & ONLY_ME)
+@Client.on_message(filters.command("spotify", prefixes=PREFIXES) & ONLY_ME)
 async def spotify_handler(client: Client, msg: Message):
     await msg.edit("🎧 <i>Получаю текущий трек...</i>")
 
