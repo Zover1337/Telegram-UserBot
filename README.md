@@ -40,7 +40,7 @@
 
 **Установка зависимостей:**
 ```bash
-pip install pyrofork requests pytz bs4 tgcrypto
+pip install pyrofork requests pytz bs4 tgcrypto aiohttp
 ```
 *(Примечание: tgcrypto рекомендуется для ускорения криптографических операций)*
 
@@ -76,7 +76,7 @@ python3 main.py
    ```
 2. Обновите зависимости (если появились новые):
    ```bash
-   pip install -U pyrofork requests pytz bs4 tgcrypto
+   pip install -U pyrofork requests pytz bs4 tgcrypto aiohttp
    ```
 3. Перезапустите бота в Telegram командой `.restart` или перезапустите службу на сервере:
    ```bash
@@ -88,7 +88,7 @@ python3 main.py
 2. Распакуйте новые файлы в папку юзербота **с заменой** существующих файлов (ваши `config.py` и `.session` останутся нетронутыми, так как их нет в архиве).
 3. При необходимости обновите зависимости:
    ```bash
-   pip install -U pyrofork requests pytz bs4 tgcrypto
+   pip install -U pyrofork requests pytz bs4 tgcrypto aiohttp
    ```
 4. Перезапустите бота через `.restart` или:
    ```bash
@@ -111,6 +111,7 @@ python3 main.py
 | `.weather [город]` | Узнать текущую погоду и прогноз. |
 | `.tt [ссылка]` | Скачать видео/слайд-шоу из TikTok (можно ответить на сообщение со ссылкой). |
 | `.usd` / `.ton` | Просмотр актуальных курсов валют и криптовалют. |
+| `.ping` / `.tcp` / `.http` | Проверка пинга, TCP, UDP, HTTP, DNS по странам через Check-Host. |
 | `.spotify` | Узнать текущий играющий трек в Spotify и получить ссылки на другие площадки. |
 | `.rand_anec` / `.poland` | Развлекательные модули. |
 

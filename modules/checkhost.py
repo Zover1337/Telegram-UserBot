@@ -1,12 +1,10 @@
 __MODULE__ = "Check-Host 🌐"
 __HELP__ = (
-    "<code>.ch [тип] &lt;цель&gt; [узлы]</code> — Универсальная проверка через Check-Host\n"
-    "<code>.ping &lt;хост&gt; [узлы]</code> — Проверка пинга по странам\n"
-    "<code>.tcp &lt;хост:порт&gt; [узлы]</code> — Проверка TCP порта\n"
-    "<code>.udp &lt;хост:порт&gt; [узлы]</code> — Проверка UDP порта\n"
-    "<code>.http &lt;url/хост&gt; [узлы]</code> — Проверка HTTP/HTTPS ответа\n"
-    "<code>.dns &lt;домен&gt; [узлы]</code> — Проверка DNS резолва\n\n"
-    "<i>По умолчанию проверяются все доступные узлы Check-Host. Можно ограничить числом (напр. <code>15</code>) или ответить на сообщение с IP/доменом.</i>"
+    "<code>.ping &lt;хост&gt;</code> — Проверка пинга по странам\n"
+    "<code>.tcp &lt;хост:порт&gt;</code> — Проверка TCP порта\n"
+    "<code>.udp &lt;хост:порт&gt;</code> — Проверка UDP порта\n"
+    "<code>.http &lt;url/хост&gt;</code> — Проверка HTTP/HTTPS ответа\n"
+    "<code>.dns &lt;домен&gt;</code> — Проверка DNS резолва"
 )
 
 import asyncio
@@ -434,7 +432,15 @@ def parse_args_and_target(command_name: str, args: list, reply_msg: Message):
     """
     target = None
     max_nodes = None
-    check_type = None
+
+    cmd_map = {
+        "ping": "ping", "chping": "ping",
+        "tcp": "tcp", "chtcp": "tcp",
+        "udp": "udp", "chudp": "udp",
+        "http": "http", "chhttp": "http",
+        "dns": "dns", "chdns": "dns"
+    }
+    check_type = cmd_map.get(command_name, "ping")
 
     # Проверка, есть ли число узлов или 'all' среди аргументов
     filtered_args = []
@@ -446,27 +452,8 @@ def parse_args_and_target(command_name: str, args: list, reply_msg: Message):
         else:
             filtered_args.append(arg)
 
-    if command_name in ("ch", "checkhost"):
-        if filtered_args:
-            first = filtered_args[0].lower()
-            if first in ("ping", "tcp", "udp", "http", "dns"):
-                check_type = first
-                if len(filtered_args) > 1:
-                    target = filtered_args[1]
-            else:
-                target = filtered_args[0]
-    else:
-        # Прямые команды .ping, .tcp, .udp, .http, .dns
-        cmd_map = {
-            "ping": "ping", "chping": "ping",
-            "tcp": "tcp", "chtcp": "tcp",
-            "udp": "udp", "chudp": "udp",
-            "http": "http", "chhttp": "http",
-            "dns": "dns", "chdns": "dns"
-        }
-        check_type = cmd_map.get(command_name, "ping")
-        if filtered_args:
-            target = filtered_args[0]
+    if filtered_args:
+        target = filtered_args[0]
 
     # Если цель не указана в аргументах, ищем в тексте реплая
     if not target and reply_msg and reply_msg.text:
@@ -474,50 +461,10 @@ def parse_args_and_target(command_name: str, args: list, reply_msg: Message):
         if words:
             target = words[0]
 
-    # Если тип проверки всё ещё не определён (для .ch <target>)
-    if not check_type and target:
-        if target.startswith("http://") or target.startswith("https://"):
-            check_type = "http"
-        elif ":" in target and not target.startswith("["):
-            check_type = "tcp"
-        else:
-            check_type = "ping"
-
     return check_type, target, max_nodes
 
 
 # --- 🚀 ХЕНДЛЕРЫ КОМАНД ---
-
-@Client.on_message(filters.command(["ch", "checkhost"], prefixes=".") & ONLY_ME)
-async def ch_universal_handler(client: Client, msg: Message):
-    args = msg.command[1:] if len(msg.command) > 1 else []
-    reply = msg.reply_to_message
-
-    check_type, target, max_nodes = parse_args_and_target("ch", args, reply)
-    em = EmojiHelper(client)
-
-    if not target or not check_type:
-        text = (
-            f"{em.globe} <b>Check-Host — Мониторинг хостов</b>\n\n"
-            f"<b>Использование:</b>\n"
-            f"• <code>.ch [тип] &lt;цель&gt; [узлы]</code>\n"
-            f"• <code>.ping &lt;хост&gt;</code>\n"
-            f"• <code>.tcp &lt;хост:порт&gt;</code>\n"
-            f"• <code>.udp &lt;хост:порт&gt;</code>\n"
-            f"• <code>.http &lt;url&gt;</code>\n"
-            f"• <code>.dns &lt;домен&gt;</code>\n\n"
-            f"<i>Примеры:</i>\n"
-            f"• <code>.ping 1.1.1.1</code>\n"
-            f"• <code>.tcp 1.1.1.1:443</code>\n"
-            f"• <code>.udp 8.8.8.8:53</code>\n"
-            f"• <code>.http https://google.com</code>\n"
-            f"• <code>.dns google.com</code>\n"
-            f"• <code>.ch ping google.com all</code>"
-        )
-        await msg.edit(text)
-        return
-
-    await execute_check(client, msg, check_type, target, max_nodes)
 
 
 @Client.on_message(filters.command(["chping", "ping"], prefixes=".") & ONLY_ME)

@@ -11,9 +11,10 @@ if not os.path.exists("config.py"):
 try:
     import config
     from pyrogram import Client
+    import aiohttp
 except ImportError:
-    print("❌ Библиотека Pyrofork не установлена.")
-    print("Установите зависимости командой: pip install pyrofork requests pytz bs4 tgcrypto")
+    print("❌ Не установлены необходимые библиотеки (Pyrofork, aiohttp и др.).")
+    print("Установите зависимости командой: pip install pyrofork requests pytz bs4 tgcrypto aiohttp")
     sys.exit(1)
 
 if not hasattr(config, "api_id") or not hasattr(config, "api_hash"):
