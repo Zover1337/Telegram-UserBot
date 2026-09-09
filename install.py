@@ -12,8 +12,8 @@ try:
     import config
     from pyrogram import Client
 except ImportError:
-    print("❌ Библиотека Pyrogram не установлена.")
-    print("Установите зависимости командой: pip install pyrogram tgcrypto")
+    print("❌ Библиотека Pyrofork не установлена.")
+    print("Установите зависимости командой: pip install pyrofork requests pytz bs4 tgcrypto")
     sys.exit(1)
 
 if not hasattr(config, "api_id") or not hasattr(config, "api_hash"):

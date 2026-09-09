@@ -7,6 +7,28 @@ from pyrogram import filters
 from pyrogram.types import Message
 import config
 
+# --- 🛠 Патч для бага Pyrofork 2.3.69 (missing 'topics' в Messages.__init__) ---
+try:
+    import inspect
+    import functools
+    from pyrogram import raw
+    for _cls_name in ("Messages", "MessagesSlice", "ChannelMessages"):
+        if hasattr(raw.types.messages, _cls_name):
+            _cls = getattr(raw.types.messages, _cls_name)
+            _orig_init = _cls.__init__
+            _params = inspect.signature(_orig_init).parameters
+            if "topics" in _params and _params["topics"].default is inspect.Parameter.empty:
+                def _make_patched_init(orig_init):
+                    @functools.wraps(orig_init)
+                    def _patched_init(self, *args, **kwargs):
+                        if "topics" not in kwargs:
+                            kwargs["topics"] = []
+                        return orig_init(self, *args, **kwargs)
+                    return _patched_init
+                _cls.__init__ = _make_patched_init(_orig_init)
+except Exception:
+    pass
+
 # --- ⚙️ КОНФИГ ---
 api_id = config.api_id
 api_hash = config.api_hash
