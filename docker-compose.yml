@@ -1,0 +1,8 @@
+services:
+  userbot:
+    build: .
+    container_name: tg-userbot
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - .:/app

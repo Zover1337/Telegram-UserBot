@@ -95,6 +95,44 @@ python3 main.py
    sudo systemctl restart userbot
    ```
 
+## 🐳 Запуск через Docker Compose
+
+Вместо systemd можно поднять бота в Docker. Контейнер перезапускается сам после падения и перезагрузки хоста (`restart: unless-stopped`).
+
+Понадобятся Docker и плагин docker compose (`docker compose version` для проверки).
+
+**1. Настройка конфига**
+```bash
+cp config.example.py config.py
+```
+Впишите `api_id`, `api_hash` и данные для Spotify, если нужен этот модуль.
+
+**2. Сборка образа**
+```bash
+docker compose build
+```
+
+**3. Авторизация аккаунта**
+Первый вход интерактивный: контейнер спросит номер телефона и код из Telegram.
+```bash
+docker compose run --rm userbot python install.py
+```
+После этого в корне проекта появится `my_userbot.session`. На вопрос про systemd ответьте `n`.
+
+**4. Запуск в фоне**
+```bash
+docker compose up -d
+```
+
+**Полезные команды:**
+```bash
+docker compose logs -f     # смотреть логи
+docker compose restart     # перезапустить бота
+docker compose down        # остановить
+```
+
+`config.py`, `.session`, скачанные через `.dlmod` модули и токены лежат в папке проекта на хосте (весь проект монтируется в контейнер), поэтому переживают пересоздание контейнера. Не коммитьте эти файлы: `.gitignore` уже исключает их.
+
 ## 🧩 Управление модулями через Telegram
 
 Благодаря встроенному `manager.py`, вы можете расширять функционал бота "на лету":
@@ -174,6 +212,7 @@ else:
 ```
 
 Скопируйте полученный `refresh_token` и вставьте его в `SPOTIFY_REFRESH_TOKEN` в `config.py`.
+
 
 <br>
 
