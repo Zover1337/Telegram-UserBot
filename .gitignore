@@ -5,3 +5,8 @@ my_userbot.session
 __pycache__/
 *.py[cod]
 *$py.class
+.omc
+.agents/
+.claude/
+.superpowers/
+userbot.service

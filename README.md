@@ -1,179 +1,171 @@
 # Modular Telegram Userbot
 
-Модульный юзербот для Telegram, написанный на Python с использованием библиотеки **Pyrofork**. Юзербот ориентирован на использование даже людьми, не имеющими больших познаний благодаря легковесной архитектуре и горячей загрузке модулей.
+Telegram-userbot на Python и Pyrofork. Команды хранятся в отдельных файлах `modules/*.py` и загружаются при запуске.
 
----
+[Руководство по созданию модулей](MODULES_GUIDE.md)
 
-[Modules Guide](https://github.com/Zover1337/Telegram-UserBot/blob/main/MODULES_GUIDE.md) - для разработчиков модулей
+## Риски
 
-## ⚠️ Дисклеймер и безопасность (Disclaimer)
+- Telegram может ограничить или заблокировать аккаунт за автоматизированные действия и использование стороннего клиента.
+- Не публикуйте `config.py`, `*.session` и токены. Эти файлы дают доступ к аккаунту и внешним сервисам.
+- `.ai` и `.aimage` работают через неофициальные провайдеры `g4f`. Провайдер получает ваш запрос и может хранить его. Не отправляйте пароли, токены, личные данные и закрытые документы.
+- `g4f` объединяет сторонних провайдеров и может перестать работать после изменений на их сайтах. В проекте зафиксирована проверенная версия пакета без дополнительных extras.
+- `.ipi` передаёт указанный IP сервису `ipwho.is`. `.cqr` создаёт QR-код локально и ничего не отправляет QR-сервисам.
 
-* **Использование на свой страх и риск:** Данный юзербот создан исключительно в ознакомительных и образовательных целях. 
-* **Риск блокировки Telegram:** Использование сторонних клиентов и автоматических скриптов (юзерботов) противоречит *Terms of Service* Telegram. Telegram алгоритмы могут расценить частые автоматизированные действия как спам/подозрительную активность, что может привести к ограничению функций или **блокировке вашего Telegram-аккаунта**. 
-* **Безопасность данных:** Никогда не публиуйте файлы `config.py` и `.session` в открытых репозиториях (например, на GitHub). В них содержатся ключи доступа, токена и приватная сессия вашей учетной записи.
+Разработчик не отвечает за блокировку аккаунта, потерю данных или последствия работы сторонних сервисов.
 
-Разработчик не несет ответственности за любой ущерб, утерю данных или блокировку аккаунтов, вызванные использованием данного программного обеспечения.
+## Возможности
 
-## 🚀 Особенности
+- Два префикса команд: `.` и `!`.
+- Обработчики принимают только ваши сообщения через `filters.me`.
+- Менеджер проверяет имя файла, помещает новый модуль в карантин и показывает SHA256 перед установкой.
+- Поддерживаются ручной запуск, systemd и Docker Compose.
 
-*   **Модульная архитектура:** Каждая команда или группа команд находится в отдельном файле в папке `modules/`. Главный файл `main.py` выступает только как точка входа.
-*   **Динамическое управление модулями:** Устанавливайте, удаляйте и обновляйте модули прямо в Telegram без необходимости перезаходить на сервер.
-*   **Готовность к Production (Systemd):** Встроенный установочный скрипт умеет автоматически генерировать демоны для Linux, чтобы бот сам запускался после перезагрузки сервера и работал 24/7.
+## Установка
 
-## 🛠 Установка и запуск
+Нужен Python 3.10 или новее.
 
-Убедитесь, что у вас установлен **Python 3.8+**.
-
-**1. Получение файлов проекта**
-
-* **Способ А (Рекомендуется ⭐): Скачивание стабильного релиза**
-  Скачайте архив последней версии со страницы [Releases](https://github.com/Zover1337/Telegram-UserBot/releases), распакуйте его в удобную папку и перейдите в неё:
-  ```bash
-  cd Telegram-UserBot
-  ```
-
-* **Способ Б: Клонирование репозитория через Git**
-  ```bash
-  git clone https://github.com/Zover1337/Telegram-UserBot
-  cd Telegram-UserBot
-  ```
-
-**Установка зависимостей:**
 ```bash
-pip install pyrofork requests pytz bs4 tgcrypto aiohttp
-```
-*(Примечание: tgcrypto рекомендуется для ускорения криптографических операций)*
-
-**2. Настройка конфигурации**
-Скопируйте пример конфига и внесите свои данные (API_ID, API_HASH и др.):
-```bash
+git clone https://github.com/Zover1337/Telegram-UserBot
+cd Telegram-UserBot
+python3 -m pip install -r requirements.txt
 cp config.example.py config.py
 ```
-*`api_id` и `api_hash` можно получить на [my.telegram.org](https://my.telegram.org/apps).*
 
-**3. Авторизация и создание демона Systemd**
-Перед первым запуском необходимо авторизовать свой аккаунт и создать файл `.session`. Для этого запустите скрипт:
+Заполните `api_id` и `api_hash` в `config.py`. Получить их можно на [my.telegram.org](https://my.telegram.org/apps).
+
+Создайте Telegram-сессию:
+
 ```bash
 python3 install.py
 ```
-Введите номер телефона и код подтверждения из Telegram. После успешного входа скрипт спросит: **«Хотите сгенерировать systemd сервис для работы бота 24/7?»**
-Если вы ставите бота на Linux-сервер (VPS), нажмите `y`. Скрипт создаст файл `userbot.service` с правильными путями и выдаст вам готовые команды (`sudo cp ...`, `systemctl enable ...`), чтобы бот работал в фоне вашей системы.
 
-**4. Запуск юзербота (без Systemd)**
-Если вы запускаете бота локально или вручную:
+Скрипт предложит создать unit-файл systemd. Для обычного запуска используйте:
+
 ```bash
 python3 main.py
 ```
 
-## 🔄 Обновление юзербота
+## Конфигурация
 
-> ⚠️ **Главное правило:** Никогда не удаляйте и не перезаписывайте свои файлы `config.py` и `*.session` при обновлении! Они хранят ваши токены и авторизацию аккаунта.
-
-### Вариант 1. Если устанавливали через Git (клон репозитория):
-1. Перейдите в директорию с юзерботом и подтяните свежие изменения:
-   ```bash
-   git pull
-   ```
-2. Обновите зависимости (если появились новые):
-   ```bash
-   pip install -U pyrofork requests pytz bs4 tgcrypto aiohttp
-   ```
-3. Перезапустите бота в Telegram командой `.restart` или перезапустите службу на сервере:
-   ```bash
-   sudo systemctl restart userbot
-   ```
-
-### Вариант 2. Если устанавливали из архива Releases (Рекомендуемый метод):
-1. Скачайте свежий архив со страницы [Releases](https://github.com/Zover1337/Telegram-UserBot/releases).
-2. Распакуйте новые файлы в папку юзербота **с заменой** существующих файлов (ваши `config.py` и `.session` останутся нетронутыми, так как их нет в архиве).
-3. При необходимости обновите зависимости:
-   ```bash
-   pip install -U pyrofork requests pytz bs4 tgcrypto aiohttp
-   ```
-4. Перезапустите бота через `.restart` или:
-   ```bash
-   sudo systemctl restart userbot
-   ```
-
-## 🧩 Управление модулями через Telegram
-
-Благодаря встроенному `manager.py`, вы можете расширять функционал бота "на лету":
-
-*   **`.dlmod`** — Установка модуля. Отправьте файл `.py` с кодом модуля в "Избранное" (Saved Messages), ответьте на него командой `.dlmod`, и юзербот сам скачает его в папку `modules` и перезапустится.
-*   **`.delmod [название]`** — Удаление модуля (например, `.delmod weather`).
-*   **`.restart`** — Перезапуск скрипта юзербота.
-
-## 📝 Основные встроенные команды
-
-| Команда | Описание |
-| :--- | :--- |
-| `.help` | Вывод списка доступных команд. |
-| `.weather [город]` | Узнать текущую погоду и прогноз. |
-| `.tt [ссылка]` | Скачать видео/слайд-шоу из TikTok (можно ответить на сообщение со ссылкой). |
-| `.usd` / `.ton` | Просмотр актуальных курсов валют и криптовалют. |
-| `.ping` / `.tcp` / `.http` | Проверка пинга, TCP, UDP, HTTP, DNS по странам через Check-Host. |
-| `.spotify` | Узнать текущий играющий трек в Spotify и получить ссылки на другие площадки. |
-| `.rand_anec` / `.poland` | Развлекательные модули. |
-
-> Юзербот реагирует **только на ваши сообщения** (`filters.me`), поэтому никто другой не сможет использовать эти команды. Поддерживаются префиксы `.` и `!` (знак `!` удобен как резерв, если в чате запрещена точка).
-
-
-## 🎧 Настройка и получение Spotify Refresh Token
-
-Для работы команды `.spotify` требуется авторизация через Spotify API. 
-
-### Шаг 1. Настройка приложения в Spotify Dashboard
-1. Перейдите в [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) и войдите в свой аккаунт.
-2. Создайте новое приложение (или выберите существующее) и перейдите в **Settings**.
-3. В поле **Redirect URIs** добавьте URL: `https://www.google.com/` и сохраните изменения.
-4. Скопируйте ваши **Client ID** и **Client Secret** в `config.py`.
-
-### Шаг 2. Авторизация и получение одноразового кода
-1. Вставьте ваш `CLIENT_ID` в следующую ссылку и откройте её в браузере:
-   ```text
-   https://accounts.spotify.com/authorize?client_id=ВАШ_CLIENT_ID&response_type=code&redirect_uri=https://www.google.com/&scope=user-read-currently-playing%20user-read-playback-state
-    ```
-
-2. Подтвердите доступ, нажав **Agree**.
-3. Вас перенаправит на Google. Скопируйте **всю адресную строку** (она содержит параметр `?code=...`).
-
-### Шаг 3. Генерация Refresh Token
-
-Код из адресной строки действителен в течение 10 минут. Выполните следующий скрипт у себя на ПК:
+Параметры погоды и AI:
 
 ```python
-import requests
+DEFAULT_CITY = "Moscow"
+AI_MODEL = "standard"
+AI_IMAGE_MODEL = "flux"
+AI_ROLE = "user"
+AI_STREAM_DELAY = 1.2
+```
+
+Существующий `config.py` продолжит работать без AI-параметров: модуль использует значения выше по умолчанию.
+
+Для `AI_MODEL` доступны `standard`, `online`, `gemma-4`, `gemini-2.5-flash-lite` и `deepseek-v3.2`. Текст обрабатывает сетевой провайдер DeepAI без запуска браузера. Изображения создаёт Pollinations.
+
+Для Spotify заполните `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` и `SPOTIFY_REFRESH_TOKEN`. `SONGLINK_API_KEY` остаётся необязательным.
+
+## Команды
+
+| Команда | Действие |
+| :--- | :--- |
+| `.help` | Показать список загруженных модулей и команд. |
+| `.ai <вопрос>` | Получить потоковый ответ через `g4f`. |
+| `.aimage <описание>` | Создать изображение через `g4f`. |
+| `.cqr <текст или ссылка>` | Создать QR-код локально. |
+| `.ipi <IP>` | Показать сведения об IPv4 или IPv6. |
+| `.cbase64 <текст>` | Кодировать UTF-8 текст в Base64. |
+| `.dbase64 <Base64>` | Декодировать Base64 в UTF-8 текст. |
+| `.weather [город]` | Показать прогноз. Без аргумента используется `DEFAULT_CITY`. |
+| `.tt <ссылка>` | Скачать видео или слайд-шоу из TikTok. |
+| `.usd` / `.ton` | Показать курсы валют. |
+| `.ping` / `.tcp` / `.udp` / `.http` / `.dns` | Проверить хост через Check-Host. |
+| `.spotify` | Показать текущий трек Spotify и ссылки на площадки. |
+| `.rand_anec` / `.poland` | Показать развлекательный текст. |
+| `.restart` | Перезапустить userbot. |
+
+Все команды также работают с префиксом `!`.
+
+## Модули из Telegram
+
+1. Отправьте `.py`-файл в Telegram.
+2. Ответьте на него командой `.dlmod`.
+3. Прочитайте код и сверьте показанный SHA256.
+4. Выполните `.dlmod confirm <sha256>` для установки.
+
+Удаление: `.delmod <имя без .py>`.
+
+Модуль выполняется с правами процесса userbot. SHA256 подтверждает неизменность файла после просмотра, но не доказывает безопасность кода.
+
+## Обновление
+
+```bash
+git pull
+python3 -m pip install -U -r requirements.txt
+```
+
+После обновления выполните `.restart` или `sudo systemctl restart userbot`.
+
+Не заменяйте `config.py` и `*.session`.
+
+## Docker Compose
+
+```bash
+cp config.example.py config.py
+docker compose build
+docker compose run --rm userbot python install.py
+docker compose up -d
+```
+
+На вопрос о systemd во время контейнерной авторизации ответьте `n`.
+
+```bash
+docker compose logs -f
+docker compose restart
+docker compose down
+```
+
+Проект монтируется в `/app`, поэтому `config.py`, сессия и установленные модули сохраняются на хосте.
+
+## Spotify Refresh Token
+
+1. Создайте приложение в [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Добавьте Redirect URI `https://www.google.com/`.
+3. Откройте ссылку, заменив `ВАШ_CLIENT_ID`:
+
+```text
+https://accounts.spotify.com/authorize?client_id=ВАШ_CLIENT_ID&response_type=code&redirect_uri=https://www.google.com/&scope=user-read-currently-playing%20user-read-playback-state
+```
+
+4. После подтверждения скопируйте параметр `code` из адресной строки.
+5. Обменяйте код на refresh token:
+
+```python
 import base64
+import requests
 
 CLIENT_ID = "ВАШ_CLIENT_ID"
 CLIENT_SECRET = "ВАШ_CLIENT_SECRET"
-# Вставьте ссылку на Google с вашим кодом:
-GOOGLE_URL = "https://www.google.com/?code=ВАШ_ПОЛУЧЕННЫЙ_КОД" 
+CODE = "КОД_ИЗ_АДРЕСНОЙ_СТРОКИ"
 
-code = GOOGLE_URL.split("code=")[1].split("&")[0]
-auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
+authorization = base64.b64encode(
+    f"{CLIENT_ID}:{CLIENT_SECRET}".encode()
+).decode()
 
-headers = {
-    "Authorization": "Basic " + base64.b64encode(auth_str.encode()).decode(),
-    "Content-Type": "application/x-www-form-urlencoded"
-}
-
-data = {
-    "grant_type": "authorization_code",
-    "code": code,
-    "redirect_uri": "https://www.google.com/"
-}
-
-res = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data).json()
-
-if "refresh_token" in res:
-    print("\n✅ Ваш SPOTIFY_REFRESH_TOKEN:\n", res["refresh_token"])
-else:
-    print("\n❌ Ошибка:", res)
-
+response = requests.post(
+    "https://accounts.spotify.com/api/token",
+    headers={"Authorization": f"Basic {authorization}"},
+    data={
+        "grant_type": "authorization_code",
+        "code": CODE,
+        "redirect_uri": "https://www.google.com/",
+    },
+    timeout=15,
+)
+response.raise_for_status()
+print(response.json()["refresh_token"])
 ```
 
-Скопируйте полученный `refresh_token` и вставьте его в `SPOTIFY_REFRESH_TOKEN` в `config.py`.
+Код авторизации действует около 10 минут. Запишите результат в `SPOTIFY_REFRESH_TOKEN`.
 
 <br>
 

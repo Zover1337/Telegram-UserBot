@@ -10,8 +10,8 @@ from utils import ONLY_ME, PREFIXES, zamok_emoji
 @Client.on_message(filters.command("help", prefixes=PREFIXES) & ONLY_ME)
 async def help_handler(_, msg: Message):
     text = (
-        f'<b>Userbot by Zover v1.0.3 (Release)</b>\n'
-        f'<i>💡 Префиксы команд: <code>.</code> и <code>!</code> (! — резерв, если точка запрещена в чате)</i>\n\n'
+        '<b>Userbot by Zover v1.0.3</b>\n'
+        '<i>Префиксы: <code>.</code> и <code>!</code></i>\n\n'
     )
     
     modules_dir = "modules"
@@ -29,6 +29,6 @@ async def help_handler(_, msg: Message):
     if loaded_modules:
         text += "\n\n".join(loaded_modules)
     else:
-        text += "<i>Нет загруженных модулей с описанием.</i>"
+        text += "<i>Модули с описанием не найдены.</i>"
         
     await msg.edit(text)

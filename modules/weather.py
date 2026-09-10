@@ -1,12 +1,16 @@
-__MODULE__ = "Погода ☁️"
-__HELP__ = "<code>.weather</code> — Погода в мск\n<code>.weather [Город]</code> — Погода в другом городе"
-
+import html
 import requests
 import pytz
 from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from utils import ONLY_ME, PREFIXES, DEFAULT_CITY, loading_effect, get_weather_emoji, world_emoji, clock_emoji, temp_emoji, calendar_emoji
+
+__MODULE__ = "Погода ☁️"
+__HELP__ = (
+    f"<code>.weather</code> — Погода в {html.escape(DEFAULT_CITY)}\n"
+    "<code>.weather [Город]</code> — Погода в другом городе"
+)
 
 @Client.on_message(filters.command("weather", prefixes=PREFIXES) & ONLY_ME)
 async def weather_handler(_, msg: Message):
