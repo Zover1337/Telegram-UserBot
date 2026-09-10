@@ -14,7 +14,7 @@ try:
     import aiohttp
 except ImportError:
     print("❌ Не установлены необходимые библиотеки (Pyrofork, aiohttp и др.).")
-    print("Установите зависимости командой: pip install pyrofork requests pytz bs4 tgcrypto aiohttp")
+    print("Установите зависимости командой: pip install -r requirements.txt")
     sys.exit(1)
 
 if not hasattr(config, "api_id") or not hasattr(config, "api_hash"):
