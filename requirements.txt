@@ -4,5 +4,7 @@ pytz
 bs4
 tgcrypto
 aiohttp
+geoip2
+pycountry
 g4f==8.4.8
 qrcode[pil]==8.2

@@ -18,3 +18,9 @@ SPOTIFY_REFRESH_TOKEN = "your_spotify_refresh_token_here"
 
 # Опционально: API-ключ Odesli / Songlink (если есть, иначе используется умный поиск и бесплатные API)
 # SONGLINK_API_KEY = "your_songlink_api_key_here"
+
+# Опционально: расширенные источники данных для .ipi
+# IPINFO_TOKEN = "your_ipinfo_token_here"
+# IPREGISTRY_KEY = "your_ipregistry_key_here"
+# MAXMIND_CITY_DB = "/path/to/GeoLite2-City.mmdb"
+# MAXMIND_ASN_DB = "/path/to/GeoLite2-ASN.mmdb"
